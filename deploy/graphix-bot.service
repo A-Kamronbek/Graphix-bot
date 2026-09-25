@@ -1,0 +1,56 @@
+# GRAPHIX - the Telegram bot that relays the shop's notifications.
+#
+# Copied to /etc/systemd/system/graphix-bot.service. It lives in the
+# repository for the same reason the site's units do: the server's behaviour
+# is reviewable, and a rebuild does not start from a blog post.
+#
+# The bot runs beside the site on the same machine, as the same user, and
+# listens on loopback only - the site reaches it at
+# http://127.0.0.1:8100/graphix/events and nothing outside the box can. It is
+# standard library only, so it runs on the system Python and there is no
+# virtualenv to build or keep in step.
+#
+# .env is read by the program itself from its working directory, so there is
+# no EnvironmentFile here - one file holds the credentials and one process
+# reads it, the same as the site.
+
+[Unit]
+Description=GRAPHIX Telegram bot
+Documentation=https://github.com/A-Kamronbek/graphix-bot
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=graphix
+Group=www-data
+WorkingDirectory=/srv/graphix-bot
+ExecStart=/usr/bin/python3 -m bot
+# On stop the bot finishes sending what it has already accepted from the
+# site (it waits up to 45 s for Telegram); give it that before the kill.
+TimeoutStopSec=60
+Restart=always
+RestartSec=5s
+# Exit status 2 is a configuration the bot refuses (a blank or wrong token or
+# secret); restarting would only repeat the same line every five seconds.
+RestartPreventExitStatus=2
+# Python buffers stdout when it is not a terminal; the journal wants lines now.
+# The repository is read-only to the service, so do not try to cache bytecode.
+Environment=PYTHONUNBUFFERED=1 PYTHONDONTWRITEBYTECODE=1
+
+# The bot writes nothing to disk at all: its log goes to the journal and its
+# queue lives in memory. Everything it can see is read-only, so say so.
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ProtectKernelTunables=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+PrivateDevices=true
+# AF_UNIX for the resolver's own sockets; the rest is HTTPS to Telegram and
+# the loopback listener.
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+
+[Install]
+WantedBy=multi-user.target
