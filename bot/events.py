@@ -14,11 +14,13 @@ wrote is ever touched.
 """
 import re
 
-#: The three events the site sends, and the button each one gets.
+#: The events the site sends, and the button each one gets. The ceiling on
+#: sign-in codes has no screen to open, so it is shown without a button.
 BUTTONS = {
     'order.paid': ('order', 'Buyurtmani ochish'),
     'message.created': ('message', 'Xabarni ochish'),
     'review.created': ('review', 'Sharhni ochish'),
+    'signin.ceiling': (None, None),
 }
 
 _ANCHOR_LINE = re.compile(r'^<a href="(?P<href>[^"]*)">[^<]*</a>$')

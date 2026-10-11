@@ -56,6 +56,13 @@ class MessageForTests(unittest.TestCase):
         self.assertIsNone(events.message_for({'event': 'order.paid'}))
         self.assertIsNone(events.message_for({}))
 
+    def test_the_code_ceiling_is_shown_without_a_button(self):
+        body = {'event': 'signin.ceiling', 'text': '<b>SMS-kodlar chegarasiga yetildi</b>',
+                'data': {'signin': {'codes_sent': 150, 'window_minutes': 60}}}
+        params = events.message_for(body)
+        self.assertEqual(params['text'], body['text'])
+        self.assertNotIn('reply_markup', params)
+
     def test_non_http_link_gets_no_button(self):
         params = events.message_for(order(text='x', url='javascript:alert(1)'))
         self.assertNotIn('reply_markup', params)
