@@ -63,6 +63,18 @@ class MessageForTests(unittest.TestCase):
         self.assertEqual(params['text'], body['text'])
         self.assertNotIn('reply_markup', params)
 
+    def test_an_uzpost_status_opens_its_order(self):
+        url = 'https://graphix.uz/uz/boshqaruv/buyurtmalar/GX-261018-0001/'
+        body = {'event': 'uzpost.status',
+                'text': '<b>Uzpost: joʻnatma holati</b> GX-261018-0001\n\n'
+                        f'<a href="{url}">Buyurtmani ochish</a>',
+                'data': {'shipment': {'order': 'GX-261018-0001', 'number': 'MM216886699UZ',
+                                      'status': 'returned_to_origin', 'admin_url': url}}}
+        params = events.message_for(body)
+        self.assertEqual(params['text'], '<b>Uzpost: joʻnatma holati</b> GX-261018-0001')
+        button = params['reply_markup']['inline_keyboard'][0][0]
+        self.assertEqual(button, {'text': 'Buyurtmani ochish', 'url': url})
+
     def test_non_http_link_gets_no_button(self):
         params = events.message_for(order(text='x', url='javascript:alert(1)'))
         self.assertNotIn('reply_markup', params)

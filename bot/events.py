@@ -15,12 +15,14 @@ wrote is ever touched.
 import re
 
 #: The events the site sends, and the button each one gets. The ceiling on
-#: sign-in codes has no screen to open, so it is shown without a button.
+#: sign-in codes has no screen to open, so it is shown without a button. An
+#: Uzpost shipment in a status the site does not act on opens its order.
 BUTTONS = {
     'order.paid': ('order', 'Buyurtmani ochish'),
     'message.created': ('message', 'Xabarni ochish'),
     'review.created': ('review', 'Sharhni ochish'),
     'signin.ceiling': (None, None),
+    'uzpost.status': ('shipment', 'Buyurtmani ochish'),
 }
 
 _ANCHOR_LINE = re.compile(r'^<a href="(?P<href>[^"]*)">[^<]*</a>$')
