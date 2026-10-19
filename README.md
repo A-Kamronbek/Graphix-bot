@@ -2,8 +2,8 @@
 
 The Telegram bot behind [graphix.uz](https://graphix.uz)'s notifications. The
 site pushes each event to the bot as signed JSON — a paid order, a contact
-message, a review waiting for moderation, the hourly ceiling on sign-in codes
-— and the bot shows it in the shop's Telegram chat, with a button that opens
+message, a review waiting for moderation, the hourly ceiling on sign-in codes,
+an Uzpost parcel in a status the site does not act on — and the bot shows it in the shop's Telegram chat, with a button that opens
 the staff panel where there is a screen to open.
 
 It is a receiving service, not a client of the site: it never reads the site
