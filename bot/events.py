@@ -16,8 +16,9 @@ import re
 
 #: The events the site sends, and the button each one gets. The ceiling on
 #: sign-in codes has no screen to open, so it is shown without a button. An
-#: Uzpost shipment in a status the site does not act on opens its order, and
-#: a request to return or exchange opens the request.
+#: Uzpost shipment in a status the site does not act on opens its order, a
+#: request to return or exchange opens the request, and a design a customer
+#: suggests opens it in the panel's list of designs.
 BUTTONS = {
     'order.paid': ('order', 'Buyurtmani ochish'),
     'message.created': ('message', 'Xabarni ochish'),
@@ -25,6 +26,7 @@ BUTTONS = {
     'signin.ceiling': (None, None),
     'uzpost.status': ('shipment', 'Buyurtmani ochish'),
     'return.new': ('return', 'Soʻrovni ochish'),
+    'design.new': ('design', 'Dizaynni ochish'),
 }
 
 _ANCHOR_LINE = re.compile(r'^<a href="(?P<href>[^"]*)">[^<]*</a>$')

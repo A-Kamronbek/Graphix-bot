@@ -87,6 +87,17 @@ class MessageForTests(unittest.TestCase):
         button = params['reply_markup']['inline_keyboard'][0][0]
         self.assertEqual(button, {'text': 'Soʻrovni ochish', 'url': url})
 
+    def test_a_suggested_design_opens_the_list_at_it(self):
+        url = 'https://graphix.uz/uz/boshqaruv/dizaynlar/#dizayn-4'
+        body = {'event': 'design.new',
+                'text': '🎨 <b>Yangi dizayn taklifi:</b> futbolka, oq\n\n'
+                        f'<a href="{url}">Dizaynni ochish</a>',
+                'data': {'design': {'id': 4, 'garment': 'tshirt', 'admin_url': url}}}
+        params = events.message_for(body)
+        self.assertEqual(params['text'], '🎨 <b>Yangi dizayn taklifi:</b> futbolka, oq')
+        button = params['reply_markup']['inline_keyboard'][0][0]
+        self.assertEqual(button, {'text': 'Dizaynni ochish', 'url': url})
+
     def test_non_http_link_gets_no_button(self):
         params = events.message_for(order(text='x', url='javascript:alert(1)'))
         self.assertNotIn('reply_markup', params)
