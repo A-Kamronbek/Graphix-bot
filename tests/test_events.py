@@ -75,6 +75,18 @@ class MessageForTests(unittest.TestCase):
         button = params['reply_markup']['inline_keyboard'][0][0]
         self.assertEqual(button, {'text': 'Buyurtmani ochish', 'url': url})
 
+    def test_a_return_request_opens_the_request(self):
+        url = 'https://graphix.uz/uz/boshqaruv/qaytarishlar/7/'
+        body = {'event': 'return.new',
+                'text': '<b>Yangi soʻrov: almashtirish</b> GX-261018-0001\n\n'
+                        f'<a href="{url}">Soʻrovni ochish</a>',
+                'data': {'return': {'id': 7, 'order': 'GX-261018-0001', 'kind': 'exchange',
+                                    'reason': 'size', 'admin_url': url}}}
+        params = events.message_for(body)
+        self.assertEqual(params['text'], '<b>Yangi soʻrov: almashtirish</b> GX-261018-0001')
+        button = params['reply_markup']['inline_keyboard'][0][0]
+        self.assertEqual(button, {'text': 'Soʻrovni ochish', 'url': url})
+
     def test_non_http_link_gets_no_button(self):
         params = events.message_for(order(text='x', url='javascript:alert(1)'))
         self.assertNotIn('reply_markup', params)
